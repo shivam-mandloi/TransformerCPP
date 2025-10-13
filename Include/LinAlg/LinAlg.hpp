@@ -3,6 +3,7 @@
 #include "vecX.hpp"
 #include <random>
 #include <ctime>
+#include <cmath>
 
 int randCount = 0;
 

@@ -11,7 +11,7 @@ public:
         bias = RandomVecX(outFeature, 1, 0.0, 0.1);
     }
 
-    void Forward(vecX<double> &input)
+    void forward(vecX<double> &input)
     {
         input = MatAdd(MatMul(weight, input), bias);
     }
