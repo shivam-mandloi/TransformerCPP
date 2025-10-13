@@ -38,6 +38,16 @@ vecX<double> MatAdd(vecX<double> mat1, vecX<double> mat2)
     return res;
 }
 
+vecX<double> HadamardProduct(vecX<double> mat1, vecX<double> mat2)
+{
+    vecX<double> res(mat1.row, mat1.col, 0);
+    for(int i = 0; i < mat1.len; i++)
+    {
+        res.push(i, mat1.Get(i) * mat2.Get(i));
+    }
+    return res;
+}
+
 vecX<double> RandomVecX(int row, int col, double mean = 0.0, double variance = 1.0)
 {
     vecX<double> vec(row, col, 0.0);

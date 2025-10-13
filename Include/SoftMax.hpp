@@ -24,6 +24,11 @@ public:
             input.push(i, input.Get(i)/total);
     }
 
+    void backward(vecX<double> &prevGrad)
+    {
+        
+    }
+
 private:
     double temprature;
 };
