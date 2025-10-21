@@ -7,16 +7,23 @@ class CrossEntropyLoss
 public:
     CrossEntropyLoss(){}
 
-    double forward(vecX<double> &input, vecX<double> &actual)
+    double forward(vecX<double> &pred, int actual)
     {
-        double loss = 0;
-        for(int i = 0; i < input.len; i++)
-        {
-            loss += (actual.Get(i) * std::log(input.Get(i)));
-        }
-        return -loss;
+        // pred should be column vector
+        savedPred = pred; index = actual;
+        double loss = -std::log(pred.Get(actual));
+        return loss;
+    }
+
+    vecX<double> backward()
+    {
+        // return column vector
+        vecX<double> grad(savedPred.len, 1, 0);
+        grad.push(index, savedPred.Get(index));
+        return grad;        
     }
 
 private:
-
+    vecX<double> savedPred;
+    int index;
 };
