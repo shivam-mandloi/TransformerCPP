@@ -9,17 +9,18 @@ using namespace std;
 // One Hidden Layer network
 struct NeuralNetwork
 {
-    // we can change the optimization to SGD_O, ADAM_O, RMSPROP_O
+    // we can change the optimization to ADAM_O/RMSPROP_O
     NeuralNetwork(int inFeature, int hiddenFeature, int outFeature) : inputDim(inFeature), hiddenDim(hiddenFeature), outDim(outFeature), ly1(inFeature, hiddenDim), ly2(hiddenDim, outDim)
     {}
 
     double Train(vecX<double> input, int index)
     {
         Predict(input);
+
         // predict the output
         double loss = crLoss.forward(input, index);
 
-        // Back propagetion
+        // Back propagation
         vecX<double> prevGrad = crLoss.backward();
         sf.backward(prevGrad);
         ly2.backward(prevGrad);
@@ -39,6 +40,8 @@ struct NeuralNetwork
         rl.forward(input);
         ly2.forward(input);
         sf.forward(input);
+        cout << endl;
+        input.print();
     }
 
 private:
@@ -60,6 +63,10 @@ int main()
 
 
     // Try to overfit model with the same input and output
-    for(int i = 0; i < 10; i++)
-        cout << "Loss: " << nn.Train(input, 2) << endl;
+    for(int i = 0; i < 100; i++)
+    {
+        vecX<double> temp = input;
+        temp.TR();
+        cout << nn.Train(temp, 2) << endl;
+    }
 }

@@ -10,7 +10,7 @@ public:
     double forward(vecX<double> &pred, int actual)
     {
         // pred should be column vector
-        savedPred = pred; index = actual;
+        savedPred = pred; index = actual; // save probability and actual index
         double loss = -std::log(pred.Get(actual));
         return loss;
     }
@@ -19,7 +19,7 @@ public:
     {
         // return column vector
         vecX<double> grad(savedPred.len, 1, 0);
-        grad.push(index, savedPred.Get(index));
+        grad.push(index, -1/savedPred.Get(index));
         return grad;        
     }
 

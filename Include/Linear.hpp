@@ -34,6 +34,8 @@ public:
         // Find the gradient of loss w.r.t. bias
         biasUpdate = prevGrad; // saved bias grad
 
+        prevGrad.TR(); // make it row vector to multiply with weight
+
         // Find the gradient of loss w.r.t. input
         prevGrad = MatMul(prevGrad, weight);
 
@@ -44,6 +46,10 @@ public:
     {
         // update the weights
         opt.update(weight, weigthUpdate, bias, biasUpdate);
+        // weight.size().print();
+        // weigthUpdate.size().print();
+        // bias.size().print();
+        // biasUpdate.size().print();
     }
 
 private:

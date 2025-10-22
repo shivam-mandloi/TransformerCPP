@@ -5,7 +5,7 @@
 class SGD
 {
 public:
-    SGD(double _lr = 0.001) : lr(_lr){}
+    SGD(double _lr = 0.01) : lr(_lr){}
 
     void update(vecX<double> &weight, vecX<double> &weightGrad, vecX<double> &bias, vecX<double> &biasGrad)
     {
