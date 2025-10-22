@@ -38,6 +38,16 @@ vecX<double> MatAdd(vecX<double> mat1, vecX<double> mat2)
     return res;
 }
 
+vecX<double> MatScalarProd(vecX<double> mat, double val)
+{
+    vecX<double> res(mat.row, mat.col, 0.0);
+    for (int i = 0; i < mat.len; i++)
+    {
+        res.push(i, val * mat.Get(i));
+    }
+    return res;
+}
+
 vecX<double> HadamardProduct(vecX<double> mat1, vecX<double> mat2)
 {
     vecX<double> res(mat1.row, mat1.col, 0);

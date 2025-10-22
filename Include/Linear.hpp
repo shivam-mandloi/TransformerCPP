@@ -1,6 +1,7 @@
 #pragma once
 
 #include "LinAlg.hpp"
+#include "Optim.hpp"
 
 /*
     forward -> Input <column vector> / return <column vector>
@@ -11,10 +12,10 @@
 class Linear
 {
 public:
-    Linear(int inFeature, int outFeature)
+    Linear(int inFeature, int outFeature, double lr = 0.001, OptimType oType = SGD_O): opt(oType, lr)
     {
         weight = RandomVecX(outFeature, inFeature, 0.0, 0.1);
-        bias = RandomVecX(outFeature, 1, 0.0, 0.1);
+        bias = RandomVecX(outFeature, 1, 0.0, 0.1);        
     }
 
     void forward(vecX<double> &input)
@@ -28,10 +29,10 @@ public:
         saved.TR(); // saved vector is column vector
 
         // Find the gradient of loss w.r.t. weight matrix
-        vecX<double> weigthUpdate = MatMul(prevGrad, saved);
+        weigthUpdate = MatMul(prevGrad, saved); // saved weight grad
 
         // Find the gradient of loss w.r.t. bias
-        vecX<double> bias = prevGrad;
+        biasUpdate = prevGrad; // saved bias grad
 
         // Find the gradient of loss w.r.t. input
         prevGrad = MatMul(prevGrad, weight);
@@ -39,6 +40,13 @@ public:
         prevGrad.TR(); // prevGrad by above operation is row vector
     }
 
+    void update()
+    {
+        // update the weights
+        opt.update(weight, weigthUpdate, bias, biasUpdate);
+    }
+
 private:
-    vecX<double> weight, bias, saved;
+    vecX<double> weight, bias, saved, weigthUpdate, biasUpdate;
+    Optim opt;
 };
