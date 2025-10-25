@@ -1,3 +1,13 @@
+/*
+To use this code follow this steps
+    1. Put this file to same folder where script.py exists.
+    2. Change the filename variable with this file name
+    3. Run the python file
+    4. Once python run successfully, one main.exe file will be generated
+*/
+
+// Sample code of nn with sgd optimizer, used for testing on one sample
+
 #include "Linear.hpp"
 #include "Relu.hpp"
 #include "SoftMax.hpp"
@@ -10,7 +20,7 @@ using namespace std;
 struct NeuralNetwork
 {
     // we can change the optimization to ADAM_O/RMSPROP_O
-    NeuralNetwork(int inFeature, int hiddenFeature, int outFeature) : inputDim(inFeature), hiddenDim(hiddenFeature), outDim(outFeature), ly1(inFeature, hiddenDim, 0.9, RMSPROP_O), ly2(hiddenDim, outDim, 0.9, RMSPROP_O)
+    NeuralNetwork(int inFeature, int hiddenFeature, int outFeature) : inputDim(inFeature), hiddenDim(hiddenFeature), outDim(outFeature), ly1(inFeature, hiddenDim), ly2(hiddenDim, outDim)
     {}
 
     double Train(vecX<double> input, int index)

@@ -4,10 +4,11 @@
 #include <random>
 #include <ctime>
 #include <cmath>
+#include <functional>
 
 int randCount = 0;
 
-vecX<double> MatMul(vecX<double> mat1, vecX<double> mat2)
+vecX<double> MatMul(vecX<double> &mat1, vecX<double> &mat2)
 {
     vecX<double> res(mat1.row, mat2.col, 0.0);
     for (int i = 0; i < mat1.row; i++)
@@ -25,7 +26,7 @@ vecX<double> MatMul(vecX<double> mat1, vecX<double> mat2)
     return res;
 }
 
-vecX<double> MatAdd(vecX<double> mat1, vecX<double> mat2)
+vecX<double> MatAdd(vecX<double> &mat1, vecX<double> &mat2)
 {
     vecX<double> res(mat1.row, mat2.col, 0.0);
     for (int i = 0; i < mat1.row; i++)
@@ -38,7 +39,7 @@ vecX<double> MatAdd(vecX<double> mat1, vecX<double> mat2)
     return res;
 }
 
-vecX<double> MatScalarProd(vecX<double> mat, double val)
+vecX<double> MatScalarProd(vecX<double> &mat, double val)
 {
     vecX<double> res(mat.row, mat.col, 0.0);
     for (int i = 0; i < mat.len; i++)
@@ -48,12 +49,15 @@ vecX<double> MatScalarProd(vecX<double> mat, double val)
     return res;
 }
 
-vecX<double> HadamardProduct(vecX<double> mat1, vecX<double> mat2)
+vecX<double> HadamardProduct(vecX<double> &mat1, vecX<double> &mat2)
 {
     vecX<double> res(mat1.row, mat1.col, 0);
-    for(int i = 0; i < mat1.len; i++)
+
+    // two loop because matrix can be transposed, and there is not any changes of transposed matrix in array
+    for(int i = 0; i < mat1.row; i++)
     {
-        res.push(i, mat1.Get(i) * mat2.Get(i));
+        for(int j = 0; j < mat1.col; j++)
+            res.push(i, j, mat1.Get(i, j) * mat2.Get(i, j));
     }
     return res;
 }
@@ -73,4 +77,17 @@ vecX<double> RandomVecX(int row, int col, double mean = 0.0, double variance = 1
         vec.push(i, gaussian(gen));
     }
     return vec;
+}
+
+
+vecX<double> ApplyFunction(vecX<double> &mat, std::function<double(double)> func)
+{
+    vecX<double> res(mat.row, mat.col, 0);
+
+    // if matrix transposed it doesn't affect on this function
+    for(int i = 0; i < mat.len; i++)
+    {
+        res.push(i, func(mat.Get(i)));
+    }
+    return res;
 }

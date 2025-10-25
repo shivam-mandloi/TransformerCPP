@@ -12,7 +12,7 @@
 class Linear
 {
 public:
-    Linear(int inFeature, int outFeature, double lr = 0.001, OptimType oType = SGD_O): opt(oType, lr)
+    Linear(int inFeature, int outFeature, double lr = 0.01, OptimType oType = SGD_O): opt(oType, lr)
     {
         weight = RandomVecX(outFeature, inFeature, 0.0, 0.1);
         bias = RandomVecX(outFeature, 1, 0.0, 0.1);        
@@ -21,7 +21,8 @@ public:
     void forward(vecX<double> &input)
     {
         saved = input;
-        input = MatAdd(MatMul(weight, input), bias);
+        input = MatMul(weight, input); // wx
+        input = MatAdd(input, bias); // wx + b
     }
 
     void backward(vecX<double> &prevGrad)
