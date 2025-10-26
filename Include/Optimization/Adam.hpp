@@ -19,7 +19,7 @@ public:
             vTW = tempW;
         }
 
-        // mt = β1* mt−1 + (1 − β1)*gt
+        // mt = β_1* mt−1 + (1 − β1)*gt
         // Bias
         mTB = MatScalarProd(mTB, beta1);
         vecX<double> biasGradbeta1 = MatScalarProd(biasGrad, (1 - beta1));
@@ -39,10 +39,9 @@ public:
 
         // Weight
         vTW = MatScalarProd(vTW, beta2);
-        sqrGradBias = HadamardProduct(biasGrad, biasGrad); // reuse the sqrGradBias
+        sqrGradBias = HadamardProduct(weightGrad, weightGrad); // reuse the sqrGradBias
         biasGradbeta1 = MatScalarProd(sqrGradBias, (1 - beta2));
         vTW = MatAdd(vTW, biasGradbeta1);
-
         // m_t = m_t / (1 − β_{1}^t)
         // Bias
         vecX<double> mBarTB = ApplyFunction(mTB, [this](double a)
@@ -58,15 +57,19 @@ public:
         // w_{t} = w_{t−1} − (η / sqrt(v_t + ϵ)) m_t
         // Bias
         vBarTB = ApplyFunction(vBarTB, [this](double a)
-                               { return -lr / (a + epsilon); });
+                               { return -lr / std::sqrt(a + epsilon); });
         vBarTB = HadamardProduct(vBarTB, mBarTB);
+        // vBarTB.print();
         bias = MatAdd(bias, vBarTB);
 
         // Weight
         vBarTW = ApplyFunction(vBarTW, [this](double a)
-                               { return -lr / (a + epsilon); });
+                               { return -lr / std::sqrt(a + epsilon); });
         vBarTW = HadamardProduct(vBarTW, mBarTW);
+        // vBarTW.print();
         weight = MatAdd(weight, vBarTW);
+        t += 1;
+        // std::cout << "why this error" << std::endl;
     }
 
 private:
