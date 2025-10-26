@@ -6,7 +6,8 @@ To use this code follow this steps
     4. Once python run successfully, one main.exe file will be generated.
 */
 
-// Sample code of nn with sgd optimizer, used for testing on one sample
+// Sample code of nn with RMSprop optimizer, used for testing on one sample
+
 
 #include "Linear.hpp"
 #include "Relu.hpp"
@@ -22,9 +23,9 @@ struct NeuralNetwork
     // we can change the optimization to ADAM_O/RMSPROP_O
     NeuralNetwork(int inFeature, int hiddenFeature, int outFeature) : inputDim(inFeature), hiddenDim(hiddenFeature), outDim(outFeature), ly1(inFeature, hiddenDim), ly2(hiddenDim, outDim)
     {
-        // Set optimization algorithm as a SGD
-        ly1.opt.SetSGD(0.01); // leanring rate
-        ly2.opt.SetSGD(0.01);
+        // Set optimization algorithm as a RMSprop
+        ly1.opt.SetRMSprop(0.99, 0.01); // gamma, learning rate
+        ly2.opt.SetRMSprop(0.99, 0.01); 
     }
 
     double Train(vecX<double> input, int index)

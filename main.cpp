@@ -10,8 +10,12 @@ using namespace std;
 struct NeuralNetwork
 {
     // we can change the optimization to ADAM_O/RMSPROP_O
-    NeuralNetwork(int inFeature, int hiddenFeature, int outFeature) : inputDim(inFeature), hiddenDim(hiddenFeature), outDim(outFeature), ly1(inFeature, hiddenDim, 0.9, RMSPROP_O), ly2(hiddenDim, outDim, 0.9, RMSPROP_O)
-    {}
+    NeuralNetwork(int inFeature, int hiddenFeature, int outFeature) : inputDim(inFeature), hiddenDim(hiddenFeature), outDim(outFeature), ly1(inFeature, hiddenDim), ly2(hiddenDim, outDim)
+    {
+        // Set optimization algorithm as a Adam
+        ly1.opt.SetAdam(0.99, 0.9, 0.01);
+        ly2.opt.SetAdam(0.99, 0.9, 0.01); 
+    }
 
     double Train(vecX<double> input, int index)
     {

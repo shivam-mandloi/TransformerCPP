@@ -79,8 +79,8 @@ vecX<double> RandomVecX(int row, int col, double mean = 0.0, double variance = 1
     return vec;
 }
 
-
-vecX<double> ApplyFunction(vecX<double> &mat, std::function<double(double)> func)
+template<typename F>
+vecX<double> ApplyFunction(vecX<double> &mat, F func)
 {
     vecX<double> res(mat.row, mat.col, 0);
 

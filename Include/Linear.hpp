@@ -12,7 +12,8 @@
 class Linear
 {
 public:
-    Linear(int inFeature, int outFeature, double lr = 0.01, OptimType oType = SGD_O): opt(oType, lr)
+    Optim opt;
+    Linear(int inFeature, int outFeature, double lr = 0.01)
     {
         weight = RandomVecX(outFeature, inFeature, 0.0, 0.1);
         bias = RandomVecX(outFeature, 1, 0.0, 0.1);        
@@ -55,5 +56,4 @@ public:
 
 private:
     vecX<double> weight, bias, saved, weigthUpdate, biasUpdate;
-    Optim opt;
 };

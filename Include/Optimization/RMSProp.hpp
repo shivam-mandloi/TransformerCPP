@@ -3,12 +3,11 @@
 #include "LinAlg.hpp"
 
 #define eps 1e-8
-#define lRate 1e-2
 
 class RMSprop
 {
 public:
-    RMSprop(double _gamma) : gamma(_gamma), eGW(), eGB() {}
+    RMSprop(double _gamma, double _lr) : gamma(_gamma), lr(_lr), epsilon(eps), eGW(), eGB() {}
 
     void update(vecX<double> &weight, vecX<double> &weightGrad, vecX<double> &bias, vecX<double> &biasGrad)
     {
@@ -31,10 +30,10 @@ public:
         vecX<double> weightGradSq = HadamardProduct(weightGrad, weightGrad); // (1 - gamma) * g^2
         weightGradSq = MatScalarProd(weightGradSq, (1 - gamma));
         eGW = MatAdd(eGW, weightGradSq);
-        vecX<double> erGB = ApplyFunction(eGB, [](double a)
-                                          { return lRate / -(std::pow(a + eps, 0.5)); }); // n / (sqrt(eGW + eps)^0.5)
-        vecX<double> erGW = ApplyFunction(eGW, [](double a)
-                                          { return lRate / -(std::pow(a + eps, 0.5)); }); // n / (sqrt(eGB + eps)^0.5)
+        vecX<double> erGB = ApplyFunction(eGB, [this](double a)
+                                          { return -lr / (std::pow(a + eps, 0.5)); }); // n / (sqrt(eGW + eps)^0.5)
+        vecX<double> erGW = ApplyFunction(eGW, [this](double a)
+                                          { return -lr / (std::pow(a + eps, 0.5)); }); // n / (sqrt(eGB + eps)^0.5)
 
         weightGrad = HadamardProduct(weightGrad, erGW);
         biasGrad = HadamardProduct(biasGrad, erGB);
@@ -44,6 +43,6 @@ public:
     }
 
 private:
-    double lr, gamma;
+    double lr, gamma, epsilon;
     vecX<double> eGW, eGB;
 };

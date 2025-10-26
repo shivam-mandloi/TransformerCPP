@@ -1,9 +1,9 @@
 /*
 To use this code follow this steps
     1. Put this file to same folder where script.py exists.
-    2. Change the filename variable with this file name
-    3. Run the python file
-    4. Once python run successfully, one main.exe file will be generated
+    2. Change the filename variable in script.py with this file name.
+    3. Run the python file.
+    4. Once python run successfully, one main.exe file will be generated.
 */
 
 // Example code for some function of LinAlg/vecX
