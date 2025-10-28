@@ -26,14 +26,29 @@ vecX<double> MatMul(vecX<double> &mat1, vecX<double> &mat2)
     return res;
 }
 
+// Add two matrix, even if there size is not same
 vecX<double> MatAdd(vecX<double> &mat1, vecX<double> &mat2)
 {
-    vecX<double> res(mat1.row, mat2.col, 0.0);
-    for (int i = 0; i < mat1.row; i++)
+    /*
+        Here mi = row, and ni = column
+        if mat1 = (m1 X n1), mat2 = (m2 X n2)
+        
+        Then take,
+            m = max(m1, m2)
+            n = max(n1, n2)
+
+        and for each  0 <= i < m and 0 <= j < n
+        use mat1[i % m1][j % n1] + mat2[i % m1][j % n2]
+    */
+   int row = std::max(mat1.row, mat2.row), col = std::max(mat1.col, mat2.col);
+   vecX<double> res(row, col, 0.0);
+
+    for (int i = 0; i < row; i++)
     {
-        for (int j = 0; j < mat1.col; j++)
+        for (int j = 0; j < col; j++)
         {
-            res.push(i, j, mat1.Get(i, j) + mat2.Get(i, j));
+            // if one matrix row or column are smaller then other it will automatic find this.
+            res.push(i, j, mat1.Get(i % mat1.row, j % mat1.col) + mat2.Get(i % mat2.row, j % mat2.col));
         }
     }
     return res;
@@ -90,4 +105,38 @@ vecX<double> ApplyFunction(vecX<double> &mat, F func)
         res.push(i, func(mat.Get(i)));
     }
     return res;
+}
+
+// make vector to matrix by copy the vector along to column/row
+// Take vector and integer: copy vector n times
+vecX<double> CopyVector(vecX<double> vector, int n)
+{
+    /*
+        => If given vector is column vector, it will expand towards column otherwise add row vectors
+    */
+    if(vector.col != 1 && vector.row != 1)
+    {
+        std::cout << "CopyVector work only on a vector" << std::endl;
+        vector.print();
+        std::exit(0);
+    }
+
+    // convert vector to row vector
+    bool isRowVector = true;
+    if(vector.col == 1)
+    {
+        vector.TR();
+        isRowVector = false;
+    }
+    vecX<double> mat(n, vector.col, 0);
+    for(int i = 0; i < n; i ++)
+    {
+        for(int j = 0; j < vector.col; j++)
+            mat.push(i, j, vector.Get(j));
+    }
+    if(!isRowVector)
+    {
+        mat.TR();
+    }
+    return mat;
 }

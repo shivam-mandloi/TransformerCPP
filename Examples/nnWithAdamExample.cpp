@@ -24,7 +24,7 @@ struct NeuralNetwork
     NeuralNetwork(int inFeature, int hiddenFeature, int outFeature) : inputDim(inFeature), hiddenDim(hiddenFeature), outDim(outFeature), ly1(inFeature, hiddenDim), ly2(hiddenDim, outDim)
     {
         // Set optimization algorithm as a Adam
-        ly1.opt.SetAdam(0.99, 0.9, 0.01);
+        ly1.opt.SetAdam(0.99, 0.9, 0.01); // beta_1, beta_2, learning rate
         ly2.opt.SetAdam(0.99, 0.9, 0.01); 
     }
 

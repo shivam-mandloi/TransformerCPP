@@ -23,6 +23,7 @@ public:
     {
         saved = input;
         input = MatMul(weight, input); // wx
+        // Mat Add take care about the different size of matrices
         input = MatAdd(input, bias); // wx + b
     }
 

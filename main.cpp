@@ -39,7 +39,7 @@ struct NeuralNetwork
     }
 
     void Predict(vecX<double> &input)
-    {
+    {    
         ly1.forward(input);
         rl.forward(input);
         ly2.forward(input);
@@ -64,7 +64,6 @@ int main()
     // Initialize the data
     vecX<double> input = {10, 4, 1, 3, 2};
     vecX<double> trueRes = {0, 0, 1};
-
 
     // Try to overfit model with the same input and output
     for(int i = 0; i < 100; i++)

@@ -34,6 +34,6 @@ class RunScript:
         self.PrintStatus(result)
 
 if __name__ == "__main__":
-    filename = "main.cpp"
+    filename = "LinAlgExample.cpp"
     script = RunScript([], filename)
     script.Run()

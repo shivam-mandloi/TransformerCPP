@@ -20,11 +20,14 @@ public:
     void forward(vecX<double> &input)
     {
         double total = 0.0;
-        for(int i = 0; i < input.len; i++)
+        for(int i = 0; i < input.row; i++)
         {
-            double temp = std::exp(clip(-50, 50, input.Get(i)/temprature));
-            input.push(i, temp);
-            total += temp;
+            for(int j = 0; i < input.col; j++)
+            {
+                double temp = std::exp(clip(-50, 50, input.Get(i, j)/temprature));
+                input.push(i, temp);
+                total += temp;
+            }
         }
 
         for(int i = 0; i < input.len; i++)
@@ -34,7 +37,6 @@ public:
 
     void backward(vecX<double> &prevGrad)
     {
-
         // we assume that prevGrad is column vector
         vecX<double> derMat(prevGrad.len, prevGrad.len, 0);
         

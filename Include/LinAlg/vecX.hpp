@@ -43,6 +43,7 @@ public:
             len = other.len;
             row = other.row;
             col = other.col;
+            isTransposed = other.isTransposed;
             arr = new T[len];
             std::copy(other.arr, other.arr + len, arr);
         }
