@@ -19,19 +19,32 @@ public:
     Softmax(double _temprature = 1): temprature(_temprature){}
     void forward(vecX<double> &input)
     {
-        double total = 0.0;
+        /*
+            => Assume input in column vector
+            (Input) m X n =>
+                m = dim of input
+                n = batch size
+            => return matrix of same size
+        */
+        vecX<double> total(input.col, 1, 0);
+        for(int i = 0; i < input.col; i++)
+        {
+            double totalSum = 0.0;
+            for(int j = 0; j < input.row; j++)
+            {
+                double temp = std::exp(clip(-50, 50, input.Get(j, i)/temprature));
+                input.push(j, i, temp);
+                totalSum += temp;
+            }
+            total.push(i, totalSum);
+        }
         for(int i = 0; i < input.row; i++)
         {
-            for(int j = 0; i < input.col; j++)
+            for(int j = 0; j < input.col; j++)
             {
-                double temp = std::exp(clip(-50, 50, input.Get(i, j)/temprature));
-                input.push(i, temp);
-                total += temp;
+                input.push(i, j, input.Get(i, j)/total.Get(j));
             }
         }
-
-        for(int i = 0; i < input.len; i++)
-            input.push(i, input.Get(i)/total);
         prob = input;
     }
 
