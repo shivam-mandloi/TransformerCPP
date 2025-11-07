@@ -1,6 +1,7 @@
 #pragma once
 
 #include "LinAlg.hpp"
+#include "GradHelpingFunc.hpp"
 #include <functional>
 
 /*
@@ -21,9 +22,9 @@ public:
     {
         /*
             => Assume input in column vector
-            (Input) m X n =>
-                m = dim of input
-                n = batch size
+            (Input) n X m =>
+                n = dim of input
+                m = batch size
             => return matrix of same size
         */
         vecX<double> total(input.col, 1, 0);
@@ -50,26 +51,8 @@ public:
 
     void backward(vecX<double> &prevGrad)
     {
-        // we assume that prevGrad is column vector
-        vecX<double> derMat(prevGrad.len, prevGrad.len, 0);
-        
-        // grad dy/dx
-        for(int i = 0; i < prevGrad.len; i++)
-        {
-            for(int j = 0; j < prevGrad.len; j++)
-            {
-                if(i == j)
-                {
-                    derMat.push(i, j, prob.Get(i) * (1- prob.Get(i)));
-                    continue;
-                }
-                derMat.push(i, j, - prob.Get(i) * prob.Get(j));
-            }
-        }
-        prevGrad.TR();
-        prevGrad = MatMul(prevGrad, derMat);
-        
-        prevGrad.TR(); // make it column vector
+        // we assume that prevGrad is row vector (batch size X input dim)
+        SoftMaxGrad(prevGrad, prob); // update preGrad
     }
 
 private:

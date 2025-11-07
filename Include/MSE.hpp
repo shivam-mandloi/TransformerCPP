@@ -9,9 +9,9 @@ public:
     {
          /*
             => Assume input in column vector
-            (Input) m X n =>
-                m = dim of input
-                n = batch size
+            (Input) n X m =>
+                n = dim of input
+                m = batch size
             => return sinlge vector
         */
         savedActual = actual; savedInput = input;
@@ -31,16 +31,21 @@ public:
 
     vecX<double> backward()
     {
-        // column vector
-        vecX<double> res(savedActual.len, 1, 0);
-        double len = 2/(double)savedActual.len;
-        
-        for(int i = 0; i < savedActual.len; i++)
-        {
-            res.push(i, len * (savedInput.Get(i) - savedActual.Get(i)));
-        }
+        /*
+            (predict) n X m =>
 
-        return res;
+            (Actual) n X m =>
+
+            (Return) m X n => 
+                n = dim of input
+                m = batch size
+         */
+        // vecX<double> prevGrad(savedActual.col, savedActual.row, 0);
+
+        savedActual = MatScalarProd(savedActual, -1);
+        vecX<double> savedInput = MatAdd(savedInput, savedActual);
+        MatScalarProd(savedInput, 2/savedActual.row);
+        return savedInput;
     }
 
 private:
