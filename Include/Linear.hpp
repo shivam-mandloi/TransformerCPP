@@ -30,6 +30,7 @@ public:
 
     void backward(vecX<double> &prevGrad)
     {
+        // std::cout << "linear grad start" << std::endl;
         LinearBackward(prevGrad, weight, bias, saved, weigthUpdate, biasUpdate);
     }
 

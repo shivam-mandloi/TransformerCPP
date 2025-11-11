@@ -17,7 +17,7 @@ void LinearBackward(vecX<double> &prevGrad, vecX<double> &weight, vecX<double> &
     /*
         y = Wx + b
             x = saved (n X m)
-            b = bias (n)
+            b = bias (k)
             W = weight (k X n)
 
             n = Input Dim
@@ -36,13 +36,13 @@ void LinearBackward(vecX<double> &prevGrad, vecX<double> &weight, vecX<double> &
     saved.TR();
 
     // for each input in batch we find the grad and then use it's mean to update the weights
-    for (int i = 0; i < prevGrad.col; i++)
+    for (int i = 0; i < prevGrad.col; i++) // Batch Size
     {
-        for (int j = 0; j < prevGrad.row; j++)
+        for (int j = 0; j < prevGrad.row; j++) // Output Dim
         {
-            for (int k = 0; k < saved.col; k++)
+            for (int k = 0; k < saved.col; k++) // Input Dim
             {
-                weigthUpdate.push(j, k, saved.Get(j, k) + (prevGrad.Get(j, i) * saved.Get(i, k)));
+                weigthUpdate.push(j, k, weigthUpdate.Get(j, k) + (prevGrad.Get(j, i) * saved.Get(i, k)));
             }
         }
     }
@@ -52,7 +52,7 @@ void LinearBackward(vecX<double> &prevGrad, vecX<double> &weight, vecX<double> &
     {
         for (int j = 0; j < prevGrad.row; j++)
         {
-            biasUpdate.push(j, 1, biasUpdate.Get(j, 1) + prevGrad.Get(j, i));
+            biasUpdate.push(j, 0, biasUpdate.Get(j, 0) + prevGrad.Get(j, i));
         }
     }
 
@@ -60,8 +60,12 @@ void LinearBackward(vecX<double> &prevGrad, vecX<double> &weight, vecX<double> &
     MatScalarProd(weigthUpdate, 1 / prevGrad.col);
     MatScalarProd(biasUpdate, 1 / prevGrad.col);
 
+    // update prevGrad
+    weight.TR();
+    prevGrad = MatMul(weight, prevGrad);
+    weight.TR();
+
     prevGrad.TR();
-    prevGrad = MatMul(prevGrad, weight);
 }
 
 void SoftMaxGrad(vecX<double> &prevGrad, vecX<double> &prob)
@@ -75,8 +79,8 @@ void SoftMaxGrad(vecX<double> &prevGrad, vecX<double> &prob)
 
         (Return): (prevGrad) m X n
     */
-    
     // For each batch we find the derivative
+    vecX<double> copyPrevGrad(prevGrad.row, prevGrad.col, 0);
     for(int batch = 0; batch < prevGrad.row; batch++) // m => batch size times
     {
         // for single batch input
@@ -88,10 +92,12 @@ void SoftMaxGrad(vecX<double> &prevGrad, vecX<double> &prob)
                 // -p_i * p_j
                 double p = -prob.Get(i, batch) * prob.Get(j, batch);
                 if(i == j)
-                    p = prob.Get(batch, i) + p; // p_i - p_i * p_j
+                    p = prob.Get(i, batch) + p; // p_i - p_i * p_j
                 total += prevGrad.Get(batch, j) * p; // matrix multiplication (prevGrad @ grad_wrt_softmax)
             }
-            prevGrad.push(batch, i, total);
+            // prevGrad.push(batch, i, total);
+            copyPrevGrad.push(batch, i, total);
         }
     }
+    prevGrad = copyPrevGrad;
 }

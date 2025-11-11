@@ -37,13 +37,13 @@ public:
                 input.push(j, i, temp);
                 totalSum += temp;
             }
-            total.push(i, totalSum);
+            total.push(i, 0, totalSum);
         }
         for(int i = 0; i < input.row; i++)
         {
             for(int j = 0; j < input.col; j++)
             {
-                input.push(i, j, input.Get(i, j)/total.Get(j));
+                input.push(i, j, input.Get(i, j)/total.Get(j,0));
             }
         }
         prob = input;

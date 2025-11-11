@@ -41,7 +41,6 @@ public:
                 m = batch size
          */
         // vecX<double> prevGrad(savedActual.col, savedActual.row, 0);
-
         savedActual = MatScalarProd(savedActual, -1);
         vecX<double> savedInput = MatAdd(savedInput, savedActual);
         MatScalarProd(savedInput, 2/savedActual.row);
