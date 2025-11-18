@@ -23,16 +23,18 @@ public:
     vecX(size_t _col, T defaultData) : vecX(1, _col, defaultData) {}
     vecX(size_t _col) : vecX(1, _col, T{}) {}
 
-    vecX(const vecX<T> &newArr) : row(newArr.row), col(newArr.col), len(newArr.len)
+    vecX(const vecX<T> &other) : row(other.row), col(other.col), len(other.len)
     {
+        isTransposed = other.isTransposed;
         arr = new T[len];
-        std::copy(newArr.arr, newArr.arr + newArr.len, arr);
+        std::copy(other.arr, other.arr + len, arr);
     }
 
     vecX(std::initializer_list<T> list) : row(1), col(list.size()), len(list.size())
     {
         arr = new T[len];
         std::copy(list.begin(), list.end(), arr);
+        isTransposed = other.isTransposed;
     }
 
     vecX<T> &operator=(const vecX<T> &other)
@@ -89,9 +91,7 @@ public:
     void TR()
     {
         isTransposed = !isTransposed;
-        int temp = row;
-        row = col;
-        col = temp;
+        std::swap(row, col);
     }
 
     void print()
